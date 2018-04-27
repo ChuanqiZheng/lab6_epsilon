@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 
     //let settle:
         ROS_WARN("turn and let settle");
-        ros::Duration(2.0).sleep();
+        ros::Duration(10.0).sleep();
     
     path_srv.request.path.poses.clear();
     pose.position.y = -29.0;
@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);    
         client.call(path_srv);
-        ros::Duration(2.0).sleep();
+        ros::Duration(10.0).sleep();
 
     path_srv.request.path.poses.clear();
     pose.position.y = -28.0;
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);    
         client.call(path_srv);
-        ros::Duration(2.0).sleep();
+        ros::Duration(10.0).sleep();
 
 
     pose.position.y = 0;

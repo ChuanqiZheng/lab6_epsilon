@@ -120,17 +120,23 @@ int main(int argc, char **argv) {
         client.call(path_srv);
         ros::Duration(2.0).sleep();
 
-
+    path_srv.request.path.poses.clear();
+    pose.position.y = -28.0;
+    pose.position.x = -0.1;   
+    pose_stamped.pose = pose;
+    path_srv.request.path.poses.push_back(pose_stamped);    
+        client.call(path_srv);
+        ros::Duration(2.0).sleep();
 
 
     pose.position.y = 0;
-    pose.position.x = -0.2;   
+    pose.position.x = -0.1;   
     pose_stamped.pose = pose;
     path_srv.request.path.poses.clear();
 
     path_srv.request.path.poses.push_back(pose_stamped);      
 
-    client.call(path_srv); //
+    client.call(path_srv); 
     ROS_WARN("head home!");
     while (fabs(g_des_state_y)>0.01) {
         ROS_INFO("des y cmd: %f",g_des_state_y);
