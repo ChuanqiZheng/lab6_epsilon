@@ -68,14 +68,14 @@ int main(int argc, char **argv) {
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);
  
-    pose.position.y = -0.1; //-30.0;
-    pose.position.x = -0.1;  
+    pose.position.y = -0.15; //-30.0;
+    pose.position.x = -0.15;  
     
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);
     
     pose.position.y = -0.3; //-30.0;
-    pose.position.x = -0.1;   
+    pose.position.x = -0.15;   
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);
     // let heading settle:
@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
     path_srv.request.path.poses.clear();
 
     pose.position.y = -30.0;
-    pose.position.x = -0.1;   
+    pose.position.x = -0.15;   
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);
     
@@ -103,34 +103,34 @@ int main(int argc, char **argv) {
     
     path_srv.request.path.poses.clear();
     pose.position.y = -30.0;
-    pose.position.x = 0.0;   
+    pose.position.x = -0.1;
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);    
         client.call(path_srv); //
 
     //let settle:
         ROS_WARN("turn and let settle");
-        ros::Duration(2.0).sleep();
+        ros::Duration(15.0).sleep();
     
     path_srv.request.path.poses.clear();
-    pose.position.y = -29.0;
-    pose.position.x = 0.0;   
+    pose.position.y = -29.9;
+    pose.position.x = -0.1;   
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);    
         client.call(path_srv);
-        ros::Duration(2.0).sleep();
-
+        ros::Duration(15.0).sleep();
+/*
     path_srv.request.path.poses.clear();
     pose.position.y = -28.0;
     pose.position.x = -0.1;   
     pose_stamped.pose = pose;
     path_srv.request.path.poses.push_back(pose_stamped);    
         client.call(path_srv);
-        ros::Duration(2.0).sleep();
-
+        ros::Duration(10.0).sleep();
+*/
 
     pose.position.y = 0;
-    pose.position.x = -0.1;   
+    pose.position.x = -0.1;
     pose_stamped.pose = pose;
     path_srv.request.path.poses.clear();
 
