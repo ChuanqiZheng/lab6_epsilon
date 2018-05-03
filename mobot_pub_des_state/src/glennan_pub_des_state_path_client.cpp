@@ -11,7 +11,11 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <std_msgs/Bool.h>
 using namespace std;
+
+//bool g_reaching_end_of_hallway = false;
+bool g_sweep_finish = false;
 
 geometry_msgs::Quaternion convertPlanarPhi2Quaternion(double phi) {
     geometry_msgs::Quaternion quaternion;
@@ -41,10 +45,24 @@ void desStateCallback(const nav_msgs::Odometry& des_state_rcvd) {
     g_des_state_phi = convertPlanarQuat2Phi(quaternion); // cheap conversion from quaternion to heading for planar motion    
 }
 
+void sweepstatusCallback(const std_msgs::Bool& sweep_msg)
+{
+  g_sweep_finish = sweep_msg.data;
+}
+
+
 int main(int argc, char **argv) {
     ros::init(argc, argv, "append_path_client");
     ros::NodeHandle n;
     ros::ServiceClient client = n.serviceClient<mobot_pub_des_state::path>("append_path_queue_service");
+
+    //ros::Publisher sweepstatus_pub = nh.advertise<std_msgs::Bool>("sweep_finish", 1);
+    //ros::Subscriber reachingendofhallway_sub = nh.subscribe("reaching_end_of_hallway", 1, reachingendofhallwayCallback);
+
+    ros::Publisher reachingendofhallway_pub = n.advertise<std_msgs::Bool>("reaching_end_of_hallway", 1);
+    
+    ros::Subscriber sweepstatus_sub = n.subscribe("sweep_finish", 1, sweepstatusCallback);
+
 
     geometry_msgs::Quaternion quat;
     ros::Subscriber des_state_subscriber= n.subscribe("/desState", 1, desStateCallback);
@@ -97,8 +115,33 @@ int main(int argc, char **argv) {
         ros::spinOnce();
     }
     
+/*
+std_msgs::Bool lidar_alarm_msg;
+   lidar_alarm_msg.data = laser_alarm_;
+lidar_alarm_publisher_.publish(lidar_alarm_msg);*/
+
+
+    std_msgs::Bool reaching_end_of_hallway;
+    reaching_end_of_hallway.data = true;
+    for(int i=0;i<10;i++)
+    {
+      reachingendofhallway_pub.publish(reaching_end_of_hallway);
+      ros::Duration(0.5).sleep();
+    }
+
+
+
     ROS_WARN("do manipulation here...");
     ros::Duration(2.0).sleep();
+
+    while(!g_sweep_finish)
+    {
+      ros::spinOnce();
+      ros::Duration(0.5).sleep(); 
+      ROS_INFO("waiting until sweep finish");
+    }
+    ros::Duration(3.0).sleep();
+
     ROS_INFO("head home: ");
     
     path_srv.request.path.poses.clear();
